@@ -1,12 +1,15 @@
 # Scope of Observability Project
 
-In this project I will documents the process invloved in configuring logs, metrics, and traces and skills I required.
+The scope of this project is to learn the Obserability skills by configuring:
 
 I will configure the following tools for this project's observability:
 - Honeycomb
 - AWS cloudwatch logs
 - AWS x-ray
 - Rollbar
+
+
+In this project I will documents the process invloved in configuring logs, metrics, and traces and skills I required.
 
 ## What is observability?
 
@@ -81,46 +84,7 @@ FlaskInstrumentor().instrument_app(app)
 RequestsInstrumentor().instrument()
 ```
 
-Your final app.py should have:
-```
-from flask import Flask
-from flask import request
-...
-...
-
-from services.home_activities import *
-from services.notifications_activities import *
-from services.user_activities import *
-...
-...
+Refer to /backend-flask/app.py file on how the instrumentation code is added.
 
 
-#honeycomb.io
-from opentelemetry import trace
-from opentelemetry.instrumentation.flask import FlaskInstrumentor
-from opentelemetry.instrumentation.requests import RequestsInstrumentor
-from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
-
-#honeycomb.io initialize tracing
-provider = TracerProvider()
-processor = BatchSpanProcessor(OTLPSpanExporter())
-provider.add_span_processor(processor)
-trace.set_tracer_provider(provider)
-tracer = trace.get_tracer(__name__)
-
-
-load_dotenv()
-
-app = Flask(__name__)
-
-#honeycomb.io initialize automatic instrumentation with Flask
-FlaskInstrumentor().instrument_app(app)
-RequestsInstrumentor().instrument()
-...
-...
-...
-```
-
-NOTE: Trucated some part of the code for visualization.
+Currently the app in the dev mode, the database is not yet connected. Instead a mock-up data is added in home_activities.py to simluate the home data. Let's do the instrumentation of home_activities.py to see how the Db connection traces are created.
