@@ -1,20 +1,26 @@
 from datetime import datetime, timedelta, timezone
 from opentelemetry import trace
-# import os
-# import time
-# import random
+import os
+import time
+import random
 
 tracer = trace.get_tracer("home.activity")
 
 class HomeActivities:
   def run():
-    with tracer.start_as_current_span("mock-data-db"):
-      # # Simulate slow latency if env var is set
-      # if os.getenv("SIMULATE_HOME_LATENCY") == "1":
-      #   delay = round(random.uniform(1, 3), 2)
-      #   span.set_attribute("mock.latency", delay)
-      #   print(f"[HomeActivities] Simulating latency: {delay}s")
-      #   time.sleep(delay)
+    with tracer.start_as_current_span("mock-data-db") as span:
+      # Simulate slow latency if env var is set
+      if os.getenv("SIMULATE_HOME_LATENCY") == "1":
+        delay = round(random.uniform(1, 3), 2)
+        span.set_attribute("mock.latency", delay)
+        print(f"[HomeActivities] Simulating latency: {delay}s")
+        time.sleep(delay)
+
+      # Simulate error via env variable (useful in tests)
+      if os.getenv("SIMULATE_HOME_ERROR") == "1":
+        span.set_attribute("mock.error", True)
+        raise Exception("Simulated error from HomeActivities")
+  
 
       now = datetime.now(timezone.utc).astimezone()
       results = [{

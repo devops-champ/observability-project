@@ -36,7 +36,7 @@ Under the hoods, Honeycomb uses OpenTelemetry (OTel) observability framework tha
 ![honeycomb.io](images/honeycomb.png)
 
 
-## Adding Autoamtic Instrumentation in Honeycomb
+## Adding Automatic Instrumentation in Honeycomb
 
 Let's get started with instrumenting honeycomb.io with the backend-flask to collect traces automatically.
 
@@ -47,6 +47,13 @@ Let's get started with instrumenting honeycomb.io with the backend-flask to coll
 - Description - It's optional. Enter a description.
 4. Click **Create Environment**.
 
+
+Add the following environment variables in `.env`:
+```
+OTEL_EXPORTER_OTLP_ENDPOINT: "https://api.honeycomb.io"
+OTEL_EXPORTER_OTLP_HEADERS: "x-honeycomb-team=your_api_key_here"
+OTEL_SERVICE_NAME: "your_service_name_here"
+```
 
 Add the following packages to `requirements.txt` file:
 ```
@@ -114,5 +121,74 @@ with tracer.start_as_current_span("mock-data-db"):
 
 Refer to /backend-flask/services/home_activites.py file on how the instrumentation code is added.
 
+Run the following command to run the docker compose file:
+```
+sudo docker compose -f docker-compose.dev.yml up -d
+```
 
+Go to your browser and enter localhost:5000/api/activities/home and refersh multiple times to send the request.
+
+Go to your Honeycomb.io and select the environment you created.
+
+Hola! You can see the traces coming up on the Home screen.
+
+![](images/traces.png)
+
+Let's understand what each graph provides information:
+
+Trace Volume: A trace helps visualize full user journeys or request lifecycles. A trace is a group of related spans representing a full request or transaction.
+
+Span Volume: This is usually a line graph showing number of individual spans received over time. A span represents a single unit of work (like a function call, DB query, etc).
+
+Span Duration: How long each span took to complete, usually in seconds or milliseconds.
+
+The following figure shows the summary of Traces:
+![](images/trace-summary.png)
+
+
+## Simulating Latency and HTTP 500 Error
+
+Let's simulate the slowness and HTTP 500 internal server error to understand how Traces are formed:
+
+set SIMULATE_HOME_LATENCY: "1" in `.env`.
+
+```
+class HomeActivities:
+  def run():
+    with tracer.start_as_current_span("mock-data-db") as span:
+      # Simulate slow latency if env var is set
+      if os.getenv("SIMULATE_HOME_LATENCY") == "1":
+        delay = round(random.uniform(1, 3), 2)
+        span.set_attribute("mock.latency", delay)
+        print(f"[HomeActivities] Simulating latency: {delay}s")
+        time.sleep(delay)
+``` 
+
+SIMULATE_HOME_ERROR: "1" in `.env`. 
+
+
+```
+      # Simulate error via env variable (useful in tests)
+      if os.getenv("SIMULATE_HOME_ERROR") == "1":
+        span.set_attribute("mock.error", True)
+        raise Exception("Simulated error from HomeActivities")
+```        
+
+when you want to simulate latency, set:
+```
+SIMULATE_HOME_LATENCY: "1"
+SIMULATE_HOME_ERROR: "0"
+```
+
+Latency Trace:
+![](images/latency.png)
+
+when you want to simulate HTTP 500 error, set:
+```
+SIMULATE_HOME_LATENCY: "0"
+SIMULATE_HOME_ERROR: "1"
+```
+
+HTTP 500 error Trace:
+![](images/http500error.png)
 
