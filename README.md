@@ -2,14 +2,11 @@
 
 The scope of this project is to learn the Obserability skills by configuring:
 
-I will configure the following tools for this project's observability:
 - Honeycomb
-- AWS cloudwatch logs
-- AWS x-ray
 - Rollbar
 
 
-In this project I will documents the process invloved in configuring logs, metrics, and traces and skills I required.
+In this project I will documents the process invloved in configuring Honeycomb and Rollbar.
 
 ## What is observability?
 
@@ -21,20 +18,27 @@ Similarly for large software systems we need some means to capture what's going 
 
 ## How it helps?
 
-## Why do hear these terms with observability
+## Observability Terms
 
-- Instrumentation: it is the code that send data to make the trace.
+While instrumenting any observability tool, we come across the following terms quite often. Let's understand the definition of each term.
 
-- Distrubuted Tracing:
+Traces: It represents the journey of a single request through various components, such as microservices, within a distributed system. Traces can be thought of as a detailed timeline of what happens behind the scenes when a user clicks a button or an API is called.
 
-- Traces
+Span: Each part of this story is told by a span. A span is a single piece of instrumentation from a single location in your code. It represents a single unit of work done by a service.
 
-- Span
+Instrumentation: It is the code that send data to make the trace.
 
 
-## Honeycomb Instrumention
+## Honeycomb
 
-Let's get started with instrumenting honeycomb.io with the backend-flask to collect traces.
+Under the hoods, Honeycomb uses OpenTelemetry (OTel) observability framework that generats, collects, and exports trace data. The following figure explains the simple architecture of Honeycomb.
+
+![honeycomb.io](images/honeycomb.png)
+
+
+## Adding Autoamtic Instrumentation in Honeycomb
+
+Let's get started with instrumenting honeycomb.io with the backend-flask to collect traces automatically.
 
 1. create an account in honeycomb.io.
 2. On the left navigation bar, click **Environment**>**Manage Environments**
@@ -87,4 +91,28 @@ RequestsInstrumentor().instrument()
 Refer to /backend-flask/app.py file on how the instrumentation code is added.
 
 
-Currently the app in the dev mode, the database is not yet connected. Instead a mock-up data is added in home_activities.py to simluate the home data. Let's do the instrumentation of home_activities.py to see how the Db connection traces are created.
+## Adding Custom Instrumentation in Honeycomb
+
+Currently the app in the dev mode, the database is not yet connected. Instead a mock-up data is added in home_activities.py to simluate the home data. Let's do the custom instrumentation of home_activities.py to see how the Db connection traces are created.
+
+Add the following package:
+```
+from opentelemetry import trace
+```
+
+Acquire a Tracer
+```
+tracer = trace.get_tracer("home.activity")
+
+```
+
+wrap function wth custom span:
+
+```
+with tracer.start_as_current_span("mock-data-db"):
+```
+
+Refer to /backend-flask/services/home_activites.py file on how the instrumentation code is added.
+
+
+
