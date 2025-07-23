@@ -1,22 +1,23 @@
 # Scope of Observability Project
 
-The scope of this project is to learn the Obserability skills by configuring:
+The scope of this project is to learn the Obserability skills by configuring Honeycomb with a Python Flask backend.
 
-- Honeycomb
-- Rollbar
+In this project I will documents the process invloved in configuring Honeycomb.
 
+## What is Observability?
 
-In this project I will documents the process invloved in configuring Honeycomb and Rollbar.
-
-## What is observability?
-
-As we know for for programming languages we have debuggers, which helps us to find the errors in the program syntax, logic etc.
+As we know for programming languages we have debuggers, which helps us to find the errors in the program syntax, logic etc.
 Similarly for large software systems we need some means to capture what's going on in this system. To capture the overall health of the software system we make use of observability.
 
+Observability is the ability to understand the internal state of a system based on the data through logs, metrics, and traces. It helps to debug, monitor, and optimize systems in distributed and microservices environments.
 
-## Why someone should configure observability in their applications?
 
-## How it helps?
+## Why you should configure observability in your applications?
+
+Observability helps you understand what’s happening inside your application when it’s running in real-world environments. When users experience slow responses, errors, or unexpected behavior, observability tools can show you exactly where the problem is such as a slow database query, failed API call, or spike in traffic.
+
+By configuring observability, you gain real-time visibility into your application's health and performance, which helps you detect issues faster.
+
 
 ## Observability Terms
 
@@ -31,6 +32,8 @@ Instrumentation: It is the code that send data to make the trace.
 
 ## Honeycomb
 
+Honeycomb.io is a cloud-native observability platform designed to debug and understand distributed systems
+
 Under the hoods, Honeycomb uses OpenTelemetry (OTel) observability framework that generats, collects, and exports trace data. The following figure explains the simple architecture of Honeycomb.
 
 ![honeycomb.io](images/honeycomb.png)
@@ -40,7 +43,7 @@ Under the hoods, Honeycomb uses OpenTelemetry (OTel) observability framework tha
 
 Let's get started with instrumenting honeycomb.io with the backend-flask to collect traces automatically.
 
-1. create an account in honeycomb.io.
+1. create an account in Honeycomb.io.
 2. On the left navigation bar, click **Environment**>**Manage Environments**
 3. Click **Create Environment** and enter the following information:
 - Name (required) - Enter a name. I entered dev-backend-flask.
@@ -100,7 +103,7 @@ Refer to /backend-flask/app.py file on how the instrumentation code is added.
 
 ## Adding Custom Instrumentation in Honeycomb
 
-Currently the app in the dev mode, the database is not yet connected. Instead a mock-up data is added in home_activities.py to simluate the home data. Let's do the custom instrumentation of home_activities.py to see how the Db connection traces are created.
+Currently the app in the dev mode, the database is not yet connected. Instead a mock-up data is added in home_activities.py to simluate the home data. Let's do the custom instrumentation of home_activities.py to see how the DB connection traces are created.
 
 Add the following package:
 ```
