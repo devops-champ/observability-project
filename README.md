@@ -1,15 +1,15 @@
 # Scope of Observability Project
 
-The scope of this project is to learn the Obserability skills by configuring Honeycomb with a Python Flask backend.
+The scope of this project is to learn the observability skills by configuring Honeycomb with a Python Flask backend.
 
-In this project I will documents the process invloved in configuring Honeycomb.
+In this project I will document the process involved in configuring Honeycomb.
 
 ## What is Observability?
 
 As we know for programming languages we have debuggers, which helps us to find the errors in the program syntax, logic etc.
 Similarly for large software systems we need some means to capture what's going on in this system. To capture the overall health of the software system we make use of observability.
 
-Observability is the ability to understand the internal state of a system based on the data through logs, metrics, and traces. It helps to debug, monitor, and optimize systems in distributed and microservices environments.
+observability is the ability to understand the internal state of a system based on the data through logs, metrics, and traces. It helps to debug, monitor, and optimize systems in distributed and microservices environments.
 
 
 ## Why you should configure observability in your applications?
@@ -103,7 +103,7 @@ Refer to /backend-flask/app.py file on how the instrumentation code is added.
 
 ## Adding Custom Instrumentation in Honeycomb
 
-Currently the app in the dev mode, the database is not yet connected. Instead a mock-up data is added in home_activities.py to simluate the home data. Let's do the custom instrumentation of home_activities.py to see how the DB connection traces are created.
+Currently the app in the dev mode, the database is not yet connected. Instead a mock-up data is added in home_activities.py to simulate the home data. Let's do the custom instrumentation of home_activities.py to see how the DB connection traces are created.
 
 Add the following package:
 ```
@@ -116,7 +116,7 @@ tracer = trace.get_tracer("home.activity")
 
 ```
 
-wrap function wth custom span:
+Wrap the function with a custom span:
 
 ```
 with tracer.start_as_current_span("mock-data-db"):
