@@ -195,3 +195,6 @@ SIMULATE_HOME_ERROR: "1"
 HTTP 500 error Trace:
 ![](images/http500error.png)
 
+
+
+CREDITS - The source code of this project belongs to AWS Bootcamp by Andrew Brown.
