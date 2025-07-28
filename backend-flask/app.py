@@ -24,6 +24,12 @@ from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExport
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
+
+#rollbar
+import rollbar
+import rollbar.contrib.flask
+from flask import got_request_exception
+
 #honeycomb.io initialize tracing
 provider = TracerProvider()
 processor = BatchSpanProcessor(OTLPSpanExporter())
@@ -50,6 +56,38 @@ cors = CORS(
   allow_headers="content-type,if-modified-since",
   methods="OPTIONS,GET,HEAD,POST"
 )
+
+with app.app_context():
+    """init rollbar module"""
+    rollbar.init(
+        # access token
+        os.getenv('ROLLBAR_ACCESS_TOKEN'),
+        # environment name - any string, like 'production' or 'development'
+        'backend-dev',
+        # server root directory, makes tracebacks prettier
+        root=os.path.dirname(os.path.realpath(__file__)),
+        # flask already sets up logging
+        allow_logging_basic_config=False)
+
+    # send exceptions from `app` to rollbar, using flask's signal system.
+    got_request_exception.connect(rollbar.contrib.flask.report_exception, app)
+
+
+@app.route('/rollbar/fix-ip')
+def fix_ip_tracking():
+    user_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    rollbar.report_message("Fixed IP simulation", "warning", extra_data={
+        'request': {
+            'user_ip': request.headers.get('X-Forwarded-For', request.remote_addr)
+        }
+    })
+    return f"Sent with IP: {user_ip}"
+
+
+@app.route('/rollbar/test')
+def rollbar_test():
+    rollbar.report_message('Hello World!', 'warning')
+    return "Hello World!"
 
 @app.route("/api/message_groups", methods=['GET'])
 def data_message_groups():

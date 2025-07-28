@@ -1,8 +1,8 @@
 # Scope of Observability Project
 
-The scope of this project is to learn the observability skills by configuring Honeycomb with a Python Flask backend.
+The scope of this project is to learn the observability skills by configuring Honeycomb and Rollbar with a Python Flask backend.
 
-In this project I will document the process involved in configuring Honeycomb.
+In this project I will document the process involved in configuring Honeycomb and Rollbar.
 
 ## What is Observability?
 
