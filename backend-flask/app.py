@@ -73,17 +73,6 @@ with app.app_context():
     got_request_exception.connect(rollbar.contrib.flask.report_exception, app)
 
 
-@app.route('/rollbar/fix-ip')
-def fix_ip_tracking():
-    user_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-    rollbar.report_message("Fixed IP simulation", "warning", extra_data={
-        'request': {
-            'user_ip': request.headers.get('X-Forwarded-For', request.remote_addr)
-        }
-    })
-    return f"Sent with IP: {user_ip}"
-
-
 @app.route('/rollbar/test')
 def rollbar_test():
     rollbar.report_message('Hello World!', 'warning')
