@@ -8,10 +8,10 @@ Rollbar is a real-time error tracking platform that helps you detect, diagnose, 
 1. Create an account in [Rollbar](https://rollbar.com/).
 2. Create a New Project:
 - **Project Name**: Enter a project name.
-- **TEAM**: Select _Owners x memeber_.
+- **TEAM**: Select _Owners x member_.
 3. Click **Create Project**.
 4. Select **Flask** as the SDK.
-5. From the code snippet copy your rollbar access token and add it in `.env`.
+5. Copy the access token provided in the code snippet. We will use this in the `.env` file.
 
 Add the following environment variable in `.env`:
 ```
@@ -30,7 +30,7 @@ $ cd backend-flask
 $ pip install -r requirements.txt
 ```
 
-In `app.py` adding the folowing imports:
+In `app.py` adding the following imports:
 ```
 import rollbar
 import rollbar.contrib.flask
@@ -62,10 +62,19 @@ Add the following test route:
 def hello():
     print("DEBUG - in hello()")
     x = None
-    x[5]
+    x[5] # This will raise a TypeError
     return "Hello World!"
-```    
+``` 
 
-Bingo! Go to your Rollbar project, and you should see the events popping up in the Dashboard.
+Run the following command to run the docker compose file:
+```
+sudo docker compose -f docker-compose.dev.yml up -d
+```
+
+visit http://localhost:5000/rollbar/test
+
+You should see a crash, and the error will be logged in your Rollbar dashboard under Items.
 
 ![Rollbar Dashboard](/images/rollbar.png)
+
+Bingo! Rollbar is now successfully instrumented with your Flask app.
