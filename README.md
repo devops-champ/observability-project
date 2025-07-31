@@ -33,6 +33,8 @@ Instrumentation: It is the code that send data to make the trace.
 
 
 Refer to the following links to learn the steps involved in instrumenting Honeycomb and Rollbar:
+- [Honeycomb Instrumentation](https://github.com/devops-champ/observability-project/blob/main/_docs/honeycomb.md#honeycomb)
+- [Rollbar Instrumentation](https://github.com/devops-champ/observability-project/blob/main/_docs/rollbar.md#configuring-rollbar)
 
 
 CREDITS - The source code of this project belongs to AWS Bootcamp by Andrew Brown.
